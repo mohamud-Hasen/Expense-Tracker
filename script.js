@@ -13,6 +13,29 @@ const dummyTransactions = [
     { id: 4, text: 'cameras', amount: 150}
 ];
 let transactions = dummyTransactions;
+
+// add transaction
+function addTransaction(e){
+    e.preventDefault();
+    if(text.value.trim === '' || amount.value.trim === '') {
+        alert('please add text or amount');
+}else {
+    const transaction = {
+        id: generteID(),
+        text: text.value,
+        amount: +amount.value
+
+    }
+   transactions.push(transaction);
+   addTransactionDom(transaction);
+   updateValues();
+   text.value = '';
+   amount.value = '';
+}
+}
+function generteID() {
+    return Math.floor(Math.random() * 100000000);
+} 
 //add transaction to dom list
 function addTransactionDom(transaction) {
     //get sign 
@@ -20,7 +43,7 @@ function addTransactionDom(transaction) {
     const item = document.createElement('li');
     item.classList.add(transaction.amount < 0 ? 'minus' : 'plus');
     item.innerHTML = `${transaction.text} <span>${sign} ${Math.abs(transaction.amount)}
-     <button class="delete-btn">x</button>
+     <button class="delete-btn" onClick="removeTransaction(${transaction.id})">x</button>
     </span>`;
     list.appendChild(item);
 }
@@ -28,6 +51,8 @@ function addTransactionDom(transaction) {
 // update the balance, income and expense
 function updateValues() {
     const amounts = transactions.map(transaction => transaction.amount );
+
+    console.log(amounts);
     const total = amounts.reduce((acc, item) => (acc += item), 0).toFixed(2);
     const income = amounts
      .filter(item => item > 0)
@@ -40,6 +65,11 @@ function updateValues() {
      money_plus.innerHTML = `${income}`;
      money_minus.innerHTML = `${expense}`;
 }
+// remove transaction by id
+function removeTransaction(id) {
+    transactions = transactions.filter(transaction => transaction.id !== id);
+    init();
+}
 //init app
 function init() {
     list.innerHTML = '';
@@ -48,3 +78,5 @@ function init() {
 }
 
 init();
+
+form.addEventListener('submit', addTransaction)
