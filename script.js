@@ -14,7 +14,7 @@ const amount = document.getElementById('amount');
 // ];
 const localStorageTransactions = JSON.parse(localStorage.getItem('transactions'));
 
-let transactions = localStorageTransactions.getItem('transactions') !== null ? localStorageTransactions : [];
+let transactions = localStorage.getItem('transactions') !== null ? localStorageTransactions : [];
 
 // add transaction
 function addTransaction(e){
@@ -29,9 +29,15 @@ function addTransaction(e){
 
     }
    transactions.push(transaction);
+
    addTransactionDom(transaction);
+
    updateValues();
+
+   updateLocalStorage();
+
    text.value = '';
+
    amount.value = '';
 }
 }
@@ -72,12 +78,19 @@ function removeTransaction(id) {
     transactions = transactions.filter(transaction => transaction.id !== id);
     init();
 }
+
+// updatge the localStorage transactions
+function updateLocalStorage() {
+    localStorage.setItem('transactions', JSON.stringify(transactions)); 
+}
+
 //init app
 function init() {
     list.innerHTML = '';
     transactions.forEach(addTransactionDom);
     updateValues();
 }
+
 
 init();
 
